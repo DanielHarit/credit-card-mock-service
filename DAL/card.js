@@ -42,8 +42,22 @@ export const makeTransaction = async (cardDetails, amount, type, description) =>
         amount: amount,
         description: description,
         type: type
+    };
+
+    const cardDetailsFindQuery = {
+            "cardDetails.cardNumber" : cardDetails.cardNumber,
+            "cardDetails.cvv" : cardDetails.cvv,
+            "cardDetails.cardHolderName" : cardDetails.cardHolderName,
+            "cardDetails.expirationYear" : cardDetails.expirationYear,
+            "cardDetails.expirationMonth" : cardDetails.expirationMonth
     }
-    const resultUpdate = await db.collection(collectionName).updateOne({cardDetails : {cardNumber: cardDetails.cardNumber}},
-        {$push: { transactions: transaction}});
-    return resultUpdate;
+    const currCardDetails = await db.collection(collectionName).findOne(cardDetailsFindQuery);
+    if(currCardDetails.amount - amount >= 0) {
+        const resultUpdate = await db.collection(collectionName).updateOne(
+            cardDetailsFindQuery,
+            {$push: { transactions: transaction}, $inc: {amount: (amount*-1)}});
+        return resultUpdate;
+    } else {
+        return "no money";
+    }
 }
