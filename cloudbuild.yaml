@@ -2,7 +2,7 @@
 steps:
     # build the container image
   - name: 'gcr.io/cloud-builders/docker'
-    args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/credit-card-mock-service', '--file', 'credit-card-mock-service/Dockerfile', './credit-card-mock-service' ]
+    args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/credit-card-mock-service']
     # push the container image
   - name: 'gcr.io/cloud-builders/docker'
     args: [ 'push', 'gcr.io/$PROJECT_ID/credit-card-mock-service']
