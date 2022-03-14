@@ -2,7 +2,8 @@ default:
     image: google/cloud-sdk:alpine
     before_script:
         - gcloud config set project $GCP_PROJECT_ID
-        - gcloud auth activate-service-account --key-file $GCP_SERVICE_ACCOUNT
+        - echo $GCP_SERVICE_ACCOUNT > gcloud-service-key.json # Google Cloud service accounts
+        - gcloud auth activate-service-account --key-file gcloud-service-key.json
 
 build:
     stage: build
