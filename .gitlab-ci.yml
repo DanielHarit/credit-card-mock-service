@@ -1,0 +1,15 @@
+default:
+    image: google/cloud-sdk:alpine
+    before_script:
+        - gcloud config set project $GCP_PROJECT_ID
+        - gcloud auth activate-service-account --key-file $GCP_SERVICE_ACCOUNT
+
+build:
+    stage: build
+    script:
+        - gcloud builds submit --tag gcr.io/$GCP_PROJECT_ID/credit-card-mock-service
+
+deploy:
+    stage: deploy
+    script:
+        - gcloud run deploy credit-card-mock-service --image gcr.io/$GCP_PROJECT_ID/credit-card-mock-service --platform managed --region asia-east1 --allow-unauthenticated
