@@ -5,8 +5,10 @@ import {createNewVirtualCard, getCardDetaileById, loadMoneyToCard, makeTransacti
 const app = express();
 app.use(express.json());
 
+var port = process.env.PORT || config.app.port;
+
 initializeDbConnection().then(() => {
-    app.listen(config.app.port, function() {
+    app.listen(port, function() {
         console.log('Server started on port: ' + config.app.port);
     });
 });
