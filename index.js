@@ -1,7 +1,11 @@
 import express from 'express'
 import config from './config.js'
 import {initializeDbConnection} from './DAL/mongoConnectios.js'
-import {createNewVirtualCard, getCardDetaileById, loadMoneyToCard, makeTransaction} from './DAL/card.js'
+import {sendCreditCardDetails,
+        createNewVirtualCard,
+        getCardDetaileById,
+        loadMoneyToCard,
+        makeTransaction} from './DAL/card.js'
 const app = express();
 app.use(express.json());
 
@@ -19,8 +23,15 @@ app.get('/card/:id', async (req, res) => {
 
 app.post('/card', async (req, res) => {
     const cardHolderName = req.body.cardHolderName;
-    const cardDetails = await createNewVirtualCard(cardHolderName);
+    const cardHolderEmail = req.body.cardHolderEmail;
+    const cardDetails = await createNewVirtualCard(cardHolderName, cardHolderEmail);
     res.send(cardDetails);
+});
+
+app.get('/card/resend/:id', async (req, res) => {
+    const id = req.params.id;
+    const messageId = await sendCreditCardDetails(id);
+    res.send(messageId);
 });
 
 app.put('/card/loadMoney', async (req,res) => {
